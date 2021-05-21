@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Cadastro de Produtos</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+</head>
+<body class="container" style="margin-top: 50px;">
+    <h2>Transações em BD (um-muitos) com Node.js, Express, Mysql</h2> 
+    <% if (messages.success) { %>
+    <div class="alert alert-success" role="alert"><%- messages.success %></div>
+    <% } %>
+
+    <% if (messages.error) { %>
+    <div class="alert alert-danger" role="alert"><%- messages.error %></div>
+    <% } %>
+
+    <div class="card"> 
+        <div class="card-header">
+            <ul class="nav nav-pills w-100">
+                <li class="nav-pill active">
+                    <a class="nav-link"><h4>Produtos cadastrados</h4></a>
+                </li>
+                <li class="nav-pill ml-auto"> 
+                    <a class="btn btn-warning" href="../insercao/adicionar">Inserir Produtos</a>
+                </li>
+            </ul>
+        </div>
+    <!-- FETCH REGISTROS em consultas coletivas -->
+    <div class="card-body">
+            <% if(dataProduto.length) { %>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Descricao</th>
+                <th scope="col">Preco</th>
+                <th scope="col">Unidade</th>
+                <th width="col">CodCateg</th>
+                
+            </tr>
+        </thead>
+        <tbody>   <!-- para todos os registros do query data, incrementar um contador -->    
+        <% for(var i = 0; i< dataProduto.length; i++) { %>
+            <tr>
+                <th scope="Linha"><%= (i+1) %></th>
+                <td><%= dataProduto[i].Descricao %></td>
+                <td><%= dataProduto[i].Preco %></td>
+                <td><%= dataProduto[i].Unidade %></td>
+                <td><%= dataProduto[i].Tipo %></td>
+                <td>
+                  <a class="btn btn-primary btn-sm edit" href="../empresa/atualizar/<%= dataProduto[i].IdProduto %>">Editar</a>  
+                </td>  
+                <td>                       
+                  <a class="btn btn-secondary btn-sm delete" 
+                  onclick="return confirm('Tem certeza da remoção do Livro: '+'<%=dataProduto[i].Descricao%>') " 
+                  href="../empresa/delete/<%=dataProduto[i].IdProduto%>">Deletar
+                </a>                       
+                </td>  
+            </tr>  <% } %>    
+        </tbody>
+    </table>
+    <% } %>   <!-- se resultado vazio da query data -->
+    <% if(!dataProduto.length) { %>
+        <p class="text-center">Livro não encontrado!</p>
+    <% } %>
+    </div>
+</div>
+</body>
+</html>

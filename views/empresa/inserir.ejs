@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Inserir Produtos/Fornecedores</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <!-- jQuery para form Modal  -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <!-- fim jQuery para form Modal  -->
+  <script>
+    //função para carregar valores do bd tabela EDITORA
+    function carregaCategoria() {
+      var select_c = document.getElementById("Lista_c").value;
+      document.getElementById("Categ").value = select_c;
+    }
+
+  </script>
+</head>
+
+<body class="container" style="margin-top: 50px;">
+
+  <% if (messages.error) { %>
+    <div class="alert alert-danger" role="alert">
+      <%- messages.error %>
+    </div>
+    <% } %>
+
+      <div class="card">
+        <div class="card-header"> Inserir Produtos </div>
+        <div class="card-body">
+
+          <form action="/insercao/adicionar" method="post">
+            <label>Descrição:</label>
+            <input type="text" class="form-control form-control-sm" name="Descricao" value="<%= Descricao %>"
+              autocomplete="off" required>
+            <label>Preço:</label>
+            <input type="text" class="form-control form-control-sm" name="Preco" value="<%= Preco %>" autocomplete="off"
+              required>
+            <label>Unidade:</label>
+            <input type="text" class="form-control form-control-sm" name="Unidade" value="<%= Unidade %>"
+              autocomplete="off" required>
+            <label>Tipo do produto:</label>
+            <!-- Select com dados do bd tabela CATEGORIA - UM-PARA-MUITOS -->
+            <select class="form-control form-control-sm" id="Lista_c" name="select" onchange="carregaCategoria()">
+              <% for (var i=0; i < dataCategoria.length; i++) { %>
+                <option value="<%= dataCategoria[i].IdCategoria %>">
+                  <%= dataCategoria[i].Tipo %>
+                </option>
+                <% } %>
+            </select>
+            <label>CodCategoria:</label>
+            <input type="text" class="form-control form-control-sm" id="Categ" name="CodCateg" value="<%= CodCateg %>">
+            <br>
+            <input type="submit" class="btn btn-warning" value="Inserir" />
+
+            <!-- !!!!! Redirecionamento do botão voltar consertado !!!!!!! -->
+
+            <a type="button" class="btn btn-dark" href="http://localhost:3000/consulta/">Voltar</a>
+            <!-- Button abrir Form Modal -->
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Incluir
+              Fornecedor</button>
+          </form>
+
+
+
+          <!--  Lista fornecedores   -->
+          <!-- FETCH REGISTROS em consultas coletivas -->
+          <div class="card-body">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Nome</th>
+                  <th scope="col">Endereco</th>
+                  <th scope="col">Cidade</th>
+                  <th scope="col">Cep</th>
+                  <th width="col">Pais</th>
+                  <th width="col">CodProd</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- para todos os registros do query data, incrementar um contador -->
+                <% for(var i=0; i< dataFornecedor.length; i++) { %>
+                  <tr>
+                    <th scope="Linha">
+                      <%= (i+1) %>
+                    </th>
+                    <td>
+                      <%= dataFornecedor[i].Nome %>
+                    </td>
+                    <td>
+                      <%= dataFornecedor[i].Endereco %>
+                    </td>
+                    <td>
+                      <%= dataFornecedor[i].Cidade %>
+                    </td>
+                    <td>
+                      <%= dataFornecedor[i].CEP %>
+                    </td>
+                    <td>
+                      <%= dataFornecedor[i].Pais %>
+                    </td>
+                    <td>
+                      <%= dataFornecedor[i].Descricao %>
+                    </td>
+                    <td>
+                      <a class="btn btn-primary btn-sm edit"
+                        href="../empresa/atualizar/<%= dataFornecedor[i].IdFornec %>">Editar</a>
+                    </td>
+                    <td>
+                      <a class="btn btn-secondary btn-sm delete"
+                        onclick="return confirm('Tem certeza da remoção do Fornecedor: '+'<%=dataFornecedor[i].Nome%>') "
+                        href="../empresa/delete/<%=dataFornecedor[i].IdFornec%>">Deletar
+                      </a>
+                    </td>
+                  </tr>
+                  <% } %>
+              </tbody>
+            </table>
+            <!--  fim Lista fornecedor   -->
+
+            <!--  Fomr MODAL    -->
+            <div class="modal" id="myModal">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h4 class="modal-title">Fornecedor por Produto</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  </div>
+                  <!-- Form Modal body -->
+                  <form action="/insercao/add" method="post">
+                    <div class="modal-body">
+                      <label>Nome:</label>
+                      <input type="text" class="form-control form-control-sm" name="Nome" value="<%= Nome %>"
+                        autocomplete="off" required>
+                      <label>Endereço:</label>
+                      <input type="text" class="form-control form-control-sm" name="Endereco" value="<%= Endereco %>"
+                        autocomplete="off" required>
+                      <label>Cidade:</label>
+                      <input type="text" class="form-control form-control-sm" name="Cidade" value="<%= Cidade %>"
+                        autocomplete="off" required>
+                      <label>Cep:</label>
+                      <input type="text" class="form-control form-control-sm" name="Cep" value="<%= Cep %>"
+                        autocomplete="off" required>
+                      <label>Pais:</label>
+                      <input type="text" class="form-control form-control-sm" name="Pais" value="<%= Pais %>"
+                        autocomplete="off" required>
+                      <label>CodProd:</label>
+                      <input type="text" class="form-control form-control-sm" name="CodProd" value="<%= CodProd %>">
+                    </div>
+                    <div class="modal-footer">
+                      <input type="submit" class="btn btn-info" value="Inserir Fornecedor" />
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+            <!--  FIM  MODAL    -->
+          </div>
+        </div>
+      </div>
+</body>
+
+</html>
